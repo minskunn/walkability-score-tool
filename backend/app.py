@@ -36,6 +36,8 @@ def get_amenities(location, radius):
     )
     return len(amenities) #Number of amenities within the given radius
 
+    #Calculate percentage of pedestrian-friendly streets
+
 def get_streets(location, radius):
     G = ox.graph_from_point(location, dist=radius, network_type='walk') 
     
@@ -47,36 +49,35 @@ def get_streets(location, radius):
         if data.get('highway') in ['footway', 'pedestrian', 'path']:
             pedestrian_friendly_length += data.get('length', 0)  # Length of walkable streets
     
-    # Calculate percentage of pedestrian-friendly streets
+    # Actual percentage calc
     walkable_street_score = (pedestrian_friendly_length / total_street_length) * 100 if total_street_length > 0 else 0
 
-    # Return percentage 
     return walkable_street_score
 
+    #Amount of unique public transport stops within the radius
 
-#Walkable streets 
-#def get_streets(location, radius):
-    G = ox.graph_from_point(location, dist=radius, network_type='walk') #Retrieve the walkable street network
-    edge_lengths = ox.utils_graph.get_route_edge_attributes(G, 'length')
-    total_street_length = sum(edge_lengths)
-    return total_street_length
-
-#Public transportation
 def get_transport(location, radius):
-    transport_stops = ox.features_from_point(
-        location,
-        tags={
-            'public_transport': ['bus_stop', 'train_station', 'tram_stop']
-        },
-        dist=radius
-    )
-    return len(transport_stops) #The number of public transport stops within the given radius
+    try:
+        transport_tags = [
+            {'public_transport': 'station'}, 
+            {'building': 'train_station'}
+        ]
+
+        transport_stops = []
+        for tag in transport_tags:
+            stops = ox.features_from_point(location, tags=tag, dist=radius)
+            transport_stops.extend(stops)
+
+        return len(transport_stops)  # The number of unique public transport stops within the given radius
+    except Exception as e:
+        print(f"Error fetching public transport stops: {e}")
+        return 0
 
 #Amount of green space
 def get_greenspaces(location, radius):
     green_spaces = ox.features_from_point(
         location,
-        tags={'leisure': 'park'},  
+        tags={'leisure': 'park','leisure': 'playground','landuse': 'greenery','landuse': 'recreation_ground'},  
         dist=radius
     )
     return len(green_spaces) #Return the area of green space 
@@ -85,7 +86,7 @@ def get_greenspaces(location, radius):
 def normalize(value, min_val=0, max_val=100):
     return min(max(0, (value - min_val) / (max_val - min_val) * 100), 100)
 
-location = (59.9227, 10.6793)  # Example coordinates 
+location = (59.9227, 10.6793)  # Example coordinates in Lysaker
 score, details = calculate_walkability_score(location, radius=1200)
 print("Walkability Score:", round(score))
 
