@@ -3,7 +3,7 @@ import geopandas as gpd
 import pandas as pd
 from shapely.geometry import Point, box
 
-# Disable cache completely
+# Disable cache 
 ox.settings.use_cache = False
 
 
@@ -30,8 +30,32 @@ def calculate_walkability_score(location, radius):
 
     return walkability_score, details
 
-#Proximity to amenities
+#Proximity of education and workspaces 
 def get_amenities(location, radius):
+    try:
+        education_and_workplace_tags = [
+        {'amenity': 'kindergarten'},
+         {'amenity': 'school'},
+         {'amenity': 'university'},
+         {'amenity': 'college'},
+         {'amenity': 'library'},
+         {'amenity': 'music_school'},
+         {'amenity': 'driving_school'},
+         {'office': True},
+        ]
+
+        education_and_workplace_locations = []
+        for tag in education_and_workplace_tags:
+            stops = ox.features_from_point(location, tags=tag, dist=radius)
+            education_and_workplace_locations.extend(stops)
+
+        return len(education_and_workplace_locations)  # The number of unique of education and workspaces 
+    except Exception as e:
+        print(f"Error fetching education and workplace locations: {e}")
+        return 0
+
+#Shopping, amenities related to food, retail, and dining
+#def get_amenities(location, radius):
     amenities = ox.features_from_point(
         location,
         tags={'amenity': True},
@@ -39,6 +63,16 @@ def get_amenities(location, radius):
     )
     return len(amenities) #Number of amenities within the given radius
 
+#Healthcare, amenities related to medical and health services
+#def get_amenities(location, radius):
+    amenities = ox.features_from_point(
+        location,
+        tags={'amenity': True},
+        dist=radius
+    )
+    return len(amenities) #Number of amenities within the given radius
+
+   
     #Calculate percentage of pedestrian-friendly streets
 
 def get_streets(location, radius):
@@ -89,7 +123,7 @@ def get_greenspaces(location, radius):
 def normalize(value, min_val=0, max_val=100):
     return min(max(0, (value - min_val) / (max_val - min_val) * 100), 100)
 
-location = (59.9227, 10.6793)  # Example coordinates in Lysaker
+location = (40.7685, 73.9822)  # Example coordinates in NY
 score, details = calculate_walkability_score(location, radius=1200)
 print("Walkability Score:", round(score))
 
