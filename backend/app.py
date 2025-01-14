@@ -3,6 +3,9 @@ import geopandas as gpd
 import pandas as pd
 from shapely.geometry import Point, box
 
+# Disable cache completely
+ox.settings.use_cache = False
+
 
 def calculate_walkability_score(location, radius):
     proximity_to_amenities = get_amenities(location, radius)
