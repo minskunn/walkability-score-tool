@@ -2,6 +2,11 @@ import osmnx as ox
 import geopandas as gpd
 import pandas as pd
 from shapely.geometry import Point, box
+from geopy.geocoders import Nominatim 
+from flask import Flask
+
+app = Flask(__name__)
+
 
 # Disable cache 
 ox.settings.use_cache = False
@@ -123,13 +128,17 @@ def get_streets(location, radius):
 
     return walkable_street_score
 
-    #Amount of unique public transport stops within the radius
+
+#Amount of unique public transport stops within the radius
 
 def get_transport(location, radius):
     try:
         transport_tags = [
-            {'public_transport': 'station'}, 
-            {'building': 'train_station'}
+            {'public_transport': 'station'},
+            {'highway': 'bus_stop'},
+            {'railway': 'station'},
+            {'railway': 'subway_entrance'},
+            {'railway': 'tram_stop'}
         ]
 
         transport_stops = []
@@ -142,7 +151,7 @@ def get_transport(location, radius):
         print(f"Error fetching public transport stops: {e}")
         return 0
 
-#Amount of green space
+#Amount of green space (the number, not squaremeters, to be modified)
 def get_greenspaces(location, radius):
     green_spaces = ox.features_from_point(
         location,
@@ -151,20 +160,64 @@ def get_greenspaces(location, radius):
     )
     return len(green_spaces) #Return the area of green space 
 
+
 #Normalize a value to a 0–100 scale
 def normalize(value, min_val=0, max_val=100):
     return min(max(0, (value - min_val) / (max_val - min_val) * 100), 100)
 
-location = (59.9019, 10.6246)  # Example coordinates in Fornebu
-score, details = calculate_walkability_score(location, radius=1200)
-print("Walkability Score:", round(score))
 
-# Display the detailed metrics with descriptions first
-print("\nDetails:")
-print(f"- {details['proximity_to_amenities']} Offices and educational institutions within the area.")
-print(f"- {details['proximity_to_shopping_and_dining']} Shops and restaurants within the area.")
-print(f"- {details['proximity_to_healthcare']} Healthcare related services within the area.")
-print(f"- {round(details['walkable_street_share'])}% of total streets are walkable.")
-print(f"- {details['green_space']} green spaces accessible in the radius.")
-print(f"- {details['public_transportation_accessibility']} public transport stops nearby.")
+# Geocoder setup
+geolocator = Nominatim(user_agent="walkability_score_tool")
+
+@app.route('/walkability', methods=['POST'])
+def walkability():
+    """
+    API endpoint to calculate walkability score.
+    Takes an address as input, geocodes it to coordinates, 
+    calculates normalized walkability score, and returns the score and metrics about the surroundings within the radius.
+    """
+    try:
+        # Parse the JSON input
+        data = request.get_json()
+        address = data.get('address', None)
+        radius = data.get('radius', 1200)
+
+        if not address:
+            return jsonify({'error': 'Enter a valid address'}), 400
+        # Geocode the address to get coordinates
+        location = geolocator.geocode(address)
+        if not location:
+            return jsonify({'error': 'Address not found'}), 404
+        
+        coordinates = (location.latitude, location.longitude)
+
+        # Call the walkability calculation function
+        score, details = calculate_walkability_score(coordinates, radius)
+        # Format the response as JSON
+        response = {
+            'address': address,
+            'coordinates': {
+                'latitude': location.latitude,
+                'longitude': location.longitude
+            },
+             'walkability_score': round(score),
+            'details': {
+                'proximity_to_amenities': details['proximity_to_amenities'],
+                'proximity_to_shopping_and_dining': details['proximity_to_shopping_and_dining'],
+                'proximity_to_healthcare': details['proximity_to_healthcare'],
+                'walkable_street_share': round(details['walkable_street_share'], 2),
+                'green_space': details['green_space'],
+                'public_transportation_accessibility': details['public_transportation_accessibility']
+            }
+        }
+        return jsonify(response), 200
+    
+    except Exception as e:
+        # Handle unexpected errors
+        return jsonify({'error': str(e)}), 500
+
+
+# Run the app
+if __name__ == '__main__':
+    app.run(debug=True)
 
