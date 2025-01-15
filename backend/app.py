@@ -6,7 +6,6 @@ from shapely.geometry import Point, box
 # Disable cache 
 ox.settings.use_cache = False
 
-
 def calculate_walkability_score(location, radius):
     proximity_to_amenities = get_amenities(location, radius)
     proximity_to_shopping = get_shopping_and_dining(location, radius)
@@ -22,7 +21,7 @@ def calculate_walkability_score(location, radius):
         0.15 * normalize(green_space) +
         0.15 * normalize(public_transportation_accessibility)
     )
-    # Prepare detailed breakdown for transparency
+    # Prepare detailed breakdown for transparency and readility of the results
     details = {
         "proximity_to_amenities": proximity_to_amenities,
         "proximity_to_shopping_and_dining": proximity_to_shopping,
@@ -156,7 +155,7 @@ def get_greenspaces(location, radius):
 def normalize(value, min_val=0, max_val=100):
     return min(max(0, (value - min_val) / (max_val - min_val) * 100), 100)
 
-location = (59.9139, 10.7522)  # Example coordinates in Oslo
+location = (59.9019, 10.6246)  # Example coordinates in Fornebu
 score, details = calculate_walkability_score(location, radius=1200)
 print("Walkability Score:", round(score))
 
