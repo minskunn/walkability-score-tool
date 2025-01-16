@@ -7,30 +7,30 @@ from flask import Flask
 
 app = Flask(__name__)
 
-
 # Disable cache 
 ox.settings.use_cache = False
 
 def calculate_walkability_score(location, radius):
-    proximity_to_amenities = get_amenities(location, radius)
-    proximity_to_shopping = get_shopping_and_dining(location, radius)
-    proximimity_to_healthcare = get_health_amenities(location, radius)
+    school_and_workplace_count=get_school_and_work_amenities(location, radius)
+    shopping_and_dining_count=get_shopping_and_dining(location, radius)
+    healthcare_services_count=get_health_amenities(location, radius)
     walkable_streets = get_streets(location, radius)
     green_space = get_greenspaces(location, radius)
     public_transportation_accessibility = get_transport(location, radius)
 
     # Calculate the weighted walkability score
+    total_amenities_count = school_and_workplace_count + shopping_and_dining_count + healthcare_services_count
     walkability_score = (
-        0.40 * normalize(proximity_to_amenities) +
+        0.40 * normalize(total_amenities_count) +
         0.30 * normalize(walkable_streets) +
         0.15 * normalize(green_space) +
         0.15 * normalize(public_transportation_accessibility)
     )
     # Prepare detailed breakdown for transparency and readility of the results
     details = {
-        "proximity_to_amenities": proximity_to_amenities,
-        "proximity_to_shopping_and_dining": proximity_to_shopping,
-        "proximity_to_healthcare": proximimity_to_healthcare,
+        "proximity_to_school_and_workplace": school_and_workplace_count,
+        "proximity_to_shopping_and_dining": shopping_and_dining_count,
+        "proximity_to_healthcare": healthcare_services_count,
         "walkable_street_share": walkable_streets,
         "green_space": green_space,
         "public_transportation_accessibility": public_transportation_accessibility
@@ -39,7 +39,7 @@ def calculate_walkability_score(location, radius):
     return walkability_score, details
 
 #Proximity of education and workspaces 
-def get_amenities(location, radius):
+def get_school_and_work_amenities(location, radius):
     try:
         # List of educational tags to check separately
         education_tags = ['kindergarten', 'school', 'university']
@@ -191,7 +191,7 @@ def walkability():
         
         coordinates = (location.latitude, location.longitude)
 
-        # Call the walkability calculation function
+        # Call the walkability score calculation function
         score, details = calculate_walkability_score(coordinates, radius)
         # Format the response as JSON
         response = {
