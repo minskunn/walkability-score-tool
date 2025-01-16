@@ -1,9 +1,16 @@
 import osmnx as ox
 import geopandas as gpd
 import pandas as pd
+import requests
+import os
 from shapely.geometry import Point, box
 from geopy.geocoders import Nominatim 
-from flask import Flask
+import certifi
+
+from flask import Flask, request, jsonify
+
+# Set the SSL certificate path
+os.environ['SSL_CERT_FILE'] = certifi.where()
 
 app = Flask(__name__)
 
@@ -20,6 +27,7 @@ def calculate_walkability_score(location, radius):
 
     # Calculate the weighted walkability score
     total_amenities_count = school_and_workplace_count + shopping_and_dining_count + healthcare_services_count
+
     walkability_score = (
         0.40 * normalize(total_amenities_count) +
         0.30 * normalize(walkable_streets) +
@@ -172,7 +180,7 @@ geolocator = Nominatim(user_agent="walkability_score_tool")
 @app.route('/walkability', methods=['POST'])
 def walkability():
     """
-    API endpoint to calculate walkability score.
+    This is API endpoint to calculate walkability score.
     Takes an address as input, geocodes it to coordinates, 
     calculates normalized walkability score, and returns the score and metrics about the surroundings within the radius.
     """
@@ -184,6 +192,7 @@ def walkability():
 
         if not address:
             return jsonify({'error': 'Enter a valid address'}), 400
+        
         # Geocode the address to get coordinates
         location = geolocator.geocode(address)
         if not location:
@@ -202,7 +211,7 @@ def walkability():
             },
              'walkability_score': round(score),
             'details': {
-                'proximity_to_amenities': details['proximity_to_amenities'],
+                'proximity_to_school_and_workplace': details['proximity_to_school_and_workplace'],
                 'proximity_to_shopping_and_dining': details['proximity_to_shopping_and_dining'],
                 'proximity_to_healthcare': details['proximity_to_healthcare'],
                 'walkable_street_share': round(details['walkable_street_share'], 2),
