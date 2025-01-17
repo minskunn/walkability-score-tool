@@ -6,6 +6,7 @@ import os
 from shapely.geometry import Point, box
 from geopy.geocoders import Nominatim 
 import certifi
+import json  
 
 from flask import Flask, request, jsonify
 
@@ -49,20 +50,17 @@ def calculate_walkability_score(location, radius):
 #Proximity of education and workspaces 
 def get_school_and_work_amenities(location, radius):
     try:
-        # List of educational tags to check separately
-        education_tags = ['kindergarten', 'school', 'university']
-        education_and_workplace_locations = []
+        school_and_work_tags = {
+            'amenity': ['kindergarten', 'school', 'university', 'college'],
+            'office': True,
+            'building': 'office'
+        }
 
-        # Query each educational tag
-        for tag in education_tags:
-            stops = ox.features_from_point(location, tags={'amenity': tag}, dist=radius)
-            education_and_workplace_locations.extend(stops)
-
-        # Query the office spaces
-        office_stops = ox.features_from_point(location, tags={'office': True}, dist=radius)
-        education_and_workplace_locations.extend(office_stops)
-
-        return len(education_and_workplace_locations)  # The total number of unique education and workplaces 
+        # Retrieve the features using features_from_point
+        get_school_and_work_amenities = ox.features_from_point(center_point=location, tags=school_and_work_tags, dist=radius)
+        
+        # Return the number of unique amenities
+        return len(get_school_and_work_amenities)
     except Exception as e:
         print(f"Error fetching education and workplace locations: {e}")
         return 0
@@ -70,56 +68,50 @@ def get_school_and_work_amenities(location, radius):
 #Amenities related to food and retail
 def get_shopping_and_dining(location, radius):
     try:
-        # Create a list of tags for other dining-related amenities
-        dining_tags = [
-            {'amenity': 'bar'},
-            {'amenity': 'cafe'},
-            {'amenity': 'restaurant'},
-            {'amenity': 'fast_food'},
-            {'amenity': 'food_court'}
-        ]
+        amenity_tags = {
+            'amenity': [
+                'bar',
+                'cafe',
+                'restaurant',
+                'fast_food',
+                'food_court'
+            ],
+            'shop': True
+        }
 
-        shopping_locations = []
+        shopping_and_dining_locations = ox.features_from_point(center_point=location, tags=amenity_tags, dist=radius)
 
-        # Query all 'shop' locations
-        shop_tag = {'shop': True}
-        shop_locations = ox.features_from_point(location, tags=shop_tag, dist=radius)
-        shopping_locations.extend(shop_locations)
-
-        # Query for other dining-related amenities
-        for tag in dining_tags:
-            locations = ox.features_from_point(location, tags=tag, dist=radius)
-            shopping_locations.extend(locations)
-
-        return len(shopping_locations)  # The total number of shopping and dining locations
+        return len(shopping_and_dining_locations)
     except Exception as e:
         print(f"Error fetching shopping and dining locations: {e}")
         return 0
 
+
 #Healthcare, amenities related to medical and health services
-
 def get_health_amenities(location, radius):
-    tags = {
-        'amenity': [
-            'clinic',
-            'dentist',
-            'doctors',
-            'hospital',
-            'pharmacy'
-        ]
-    }
+    try:
+        healthcare_tags = {
+            'amenity': [
+                'clinic',
+                'dentist',
+                'doctors',
+                'hospital',
+                'pharmacy'
+            ]
+        }
 
-    healthcare_amenities = ox.features_from_point(
-        location,
-        tags=tags,
-        dist=radius
-    )
+        healthcare_amenities = ox.features_from_point(
+            center_point=location,
+            tags=healthcare_tags,
+            dist=radius
+        )
 
-    return len(healthcare_amenities)
+        return len(healthcare_amenities)
+    except Exception as e:
+        print(f"Error fetching healthcare locations: {e}")
+        return 0
 
-
-#Calculate percentage of pedestrian-friendly streets
-
+#Calculate percentage of pedestrian-friendly streets of all the street in the radius area
 def get_streets(location, radius):
     G = ox.graph_from_point(location, dist=radius, network_type='walk') 
     
@@ -138,36 +130,36 @@ def get_streets(location, radius):
 
 
 #Amount of unique public transport stops within the radius
-
 def get_transport(location, radius):
-    try:
-        transport_tags = [
-            {'public_transport': 'station'},
-            {'highway': 'bus_stop'},
-            {'railway': 'station'},
-            {'railway': 'subway_entrance'},
-            {'railway': 'tram_stop'}
-        ]
-
-        transport_stops = []
-        for tag in transport_tags:
-            stops = ox.features_from_point(location, tags=tag, dist=radius)
-            transport_stops.extend(stops)
-
-        return len(transport_stops)  # The number of unique public transport stops within the given radius
-    except Exception as e:
-        print(f"Error fetching public transport stops: {e}")
-        return 0
-
-#Amount of green space (the number, not squaremeters, to be modified)
-def get_greenspaces(location, radius):
-    green_spaces = ox.features_from_point(
-        location,
-        tags={'leisure': 'park','leisure': 'playground','landuse': 'greenery','landuse': 'recreation_ground'},  
-        dist=radius
+    transport_stops = ox.features_from_point(
+        location, 
+        tags={
+            'public_transport': 'station',
+            'highway': 'bus_stop',
+            'railway': ['station', 'subway_entrance', 'tram_stop']
+        }, 
+        dist=radius 
     )
-    return len(green_spaces) #Return the area of green space 
+    return len((transport_stops))  # The number of unique public transport stops within the given radius
 
+#Surface area of green spaces
+
+def get_greenspaces(location, radius):
+   
+    try:
+        green_space_tags = {
+            'leisure': ['park', 'playground'],
+            'landuse': ['greenery', 'grass', 'recreation_ground']
+        }
+        green_spaces = ox.features_from_point(center_point=location, tags=green_space_tags, dist=radius)
+
+        # Calculate the total surface area in square meters
+        total_green_area = green_spaces.geometry.area.sum()
+
+        return total_green_area
+    except Exception as e:
+        print(f"Error fetching green spaces: {e}")
+        return 0.0
 
 #Normalize a value to a 0–100 scale
 def normalize(value, min_val=0, max_val=100):
@@ -193,12 +185,17 @@ def walkability():
         if not address:
             return jsonify({'error': 'Enter a valid address'}), 400
         
+        # Print the entire JSON input data
+        print(json.dumps(data, indent=4))
+        
         # Geocode the address to get coordinates
         location = geolocator.geocode(address)
         if not location:
             return jsonify({'error': 'Address not found'}), 404
+
         
         coordinates = (location.latitude, location.longitude)
+
 
         # Call the walkability score calculation function
         score, details = calculate_walkability_score(coordinates, radius)
@@ -224,7 +221,6 @@ def walkability():
     except Exception as e:
         # Handle unexpected errors
         return jsonify({'error': str(e)}), 500
-
 
 # Run the app
 if __name__ == '__main__':
