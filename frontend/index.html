@@ -10,52 +10,141 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg">
-      <div class="container-fluid">
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <a class="nav-link active" aria-current="page" href="/.more.html"
-            >LEARN MORE</a
-          >
-        </div>
-      </div>
-    </nav>
-    <header></header>
-    <div class="container">
-      <h1 class="text-center">Walkability Score</h1>
+    <div class="container mt-5 mb-5">
+      <header>
+        <h1 class="text-center">Walkability Score</h1>
+      </header>
       <h2 class="hero-text text-center">
         What is around you in a 15-minute walk?
       </h2>
       <div class="search-container text-center">
-        <input type="text" placeholder="Enter an address" id="address-input" />
-        <button id="calculate-button">calculate</button>
+        <input
+          type="text"
+          placeholder="Enter an address"
+          id="address-input"
+          required
+        />
+        <button id="calculate-button">Calculate</button>
       </div>
-      <div class="metrics">
-        <div class="total-score" id="walkability-score"></div>
-        <div class="row">
-          <div class="col-4">Column for metrics</div>
-          <div class="col-4">Column for metrics</div>
-          <div class="col-4">Column for metrics</div>
+      <div class="metrics text-center my-4">
+        <!-- Total Score Section -->
+        <div
+          class="total-score display-4 fw-bold text-primary"
+          id="walkability-score"
+        >
+          <!-- Total Score will be injected dynamically -->
         </div>
-        <div class="row">
-          <div class="col-4">Column for metrics</div>
-          <div class="col-4">Column for metrics</div>
-          <div class="col-4">Column for metrics</div>
+        <p class="text-muted">Your Walkability Score</p>
+
+        <!-- Metrics Section -->
+        <div class="row mt-4">
+          <!-- First Row of Metrics -->
+          <div class="col-12 col-md-4">
+            <div class="metric-box">
+              <h5 class="metric-title">Schools & Workplaces</h5>
+              <p
+                class="metric-value text-success"
+                id="proximity_to_school_and_workplace"
+              ></p>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="metric-box">
+              <h5 class="metric-title">Shopping & Dining</h5>
+              <p
+                class="metric-value text-success"
+                id="proximity_to_shopping_and_dining"
+              ></p>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="metric-box">
+              <h5 class="metric-title">Healthcare Services</h5>
+              <p
+                class="metric-value text-success"
+                id="proximity_to_healthcare"
+              ></p>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <!-- Second Row of Metrics -->
+          <div class="col-12 col-md-4">
+            <div class="metric-box">
+              <h5 class="metric-title">Walkable Streets (%)</h5>
+              <p
+                class="metric-value text-success"
+                id="walkable_street_share"
+              ></p>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="metric-box">
+              <h5 class="metric-title">Green Space (m²)</h5>
+              <p class="metric-value text-success" id="green_space"></p>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="metric-box">
+              <h5 class="metric-title">Public Transport Stops</h5>
+              <p
+                class="metric-value text-success"
+                id="public_transportation_accessibility"
+              ></p>
+            </div>
+          </div>
         </div>
       </div>
-      <h3>Why Walkability Matters?</h3>
-      <p>
-        It is not just nice that things are close. Walkability shapes how we
-        connect with our neighbourhoods and the world around us. It fosters
-        healthier lifestyles, reduces our environmental impact, and brings the
-        essentials of daily life closer to home. By designing cities for people,
-        streets become places for connection and green spaces flourish.
-      </p>
-      <h3>How Does This Work?</h3>
-      <p></p>
-      <footer>
-        <div class="socials-footer text-center">
+      <div class="container my-5">
+        <!-- First Row: Text on the Left, Image on the Right -->
+        <div class="row align-items-center mb-4">
+          <div class="col-12 col-md-6">
+            <h3 class="fw-bold">Why Walkability Matters?</h3>
+            <p>
+              It’s not just about convenience—walkability shapes how we connect
+              with our neighborhoods and the world around us. It fosters
+              healthier lifestyles, reduces our environmental impact, and brings
+              the essentials of daily life closer to home. When cities
+              prioritize people over cars, streets become places for connection,
+              local businesses thrive, and green spaces flourish.
+            </p>
+          </div>
+          <div class="col-12 col-md-6">
+            <img
+              src="placeholder-image-1.jpg"
+              alt="A walkable city concept"
+              class="img-fluid rounded"
+            />
+          </div>
+        </div>
+
+        <!-- Second Row: Image on the Left, Text on the Right -->
+        <div class="row align-items-center">
+          <div class="col-12 col-md-6 order-md-2">
+            <h3 class="fw-bold">How Does This Work?</h3>
+            <p>
+              Enter your address to calculate a total walkability score based on
+              six key metrics: proximity to schools, workplaces, shopping,
+              dining, green spaces, and public transport stops. We analyze
+              walkable streets, green areas, and access to daily essentials to
+              give you a complete picture of how walkable your area is.
+            </p>
+          </div>
+          <div class="col-12 col-md-6 order-md-1">
+            <img
+              src="placeholder-image-2.jpg"
+              alt="How the walkability tool works"
+              class="img-fluid rounded"
+            />
+          </div>
+        </div>
+      </div>
+
+      <footer class="socials-footer">
+        <div class="text-center">
           coded and designed by
           <a
             href="https://www.linkedin.com/in/minna-maria-karvonen/"

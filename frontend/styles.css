@@ -1,0 +1,140 @@
+/* General Page Styling */
+body {
+  font-family: Arial, sans-serif; /* A simple, clean font */
+  background-color: #f5f9ff; /* A soft background to make content pop */
+  color: #024051; /* Text color for the entire page */
+  margin: 0;
+  padding: 0;
+}
+
+/* Header and Main Title */
+header h1 {
+  font-size: 14px; /* Small font size for the main title */
+  font-family: "Cursive", sans-serif; /* Cute, visually pleasing font */
+  text-align: center;
+  margin-top: 10px;
+  color: #024051;
+}
+
+/* Hero Section */
+.hero-text {
+  font-size: 3rem; /* Very large text */
+  font-weight: 300; /* Light font to avoid heaviness */
+  text-align: center;
+  background-color: #8cbaff;
+  color: #024051;
+  padding: 20px;
+  margin-top: 20px;
+  animation: slideDown 1s ease-out; /* Falling animation */
+}
+
+/* Hero Text Animation */
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Search Bar */
+.search-container {
+  text-align: center;
+  background-color: #8cbaff;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+#address-input {
+  width: 75%; /* Large width for input */
+  font-size: 2rem; /* About 75% of hero text */
+  padding: 10px;
+  border: 1px solid #024051;
+  border-radius: 5px;
+  color: #024051;
+}
+
+#calculate-button {
+  font-size: 2rem; /* Match the size of the input */
+  background-color: #faa85e;
+  border: none;
+  padding: 10px 20px;
+  color: #fff;
+  border-radius: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+#calculate-button:hover {
+  background-color: #f49448; /* Slightly darker orange on hover */
+}
+
+/* Metrics Section */
+.metrics {
+  margin-top: 40px;
+}
+
+.metric-box h5 {
+  font-size: 1.5rem; /* Easy-to-read metric titles */
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.metric-box .metric-value {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+/* Content Section */
+.container.my-5 {
+  background-color: #fff; /* White background for this container */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 20px;
+}
+
+.container.my-5 h3 {
+  font-size: 1.5rem; /* About 50% of hero heading */
+  font-weight: 700; /* Bold and easy to read */
+  color: #024051;
+  margin-bottom: 10px;
+}
+
+.container.my-5 p {
+  font-size: 1rem;
+  line-height: 1.6; /* Proper readability for paragraphs */
+  margin-bottom: 10px;
+}
+
+.container.my-5 img {
+  border-radius: 8px; /* Match container's rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+footer.socials-footer {
+  background-color: #fff; /* White footer background */
+  text-align: center;
+  font-size: 0.75rem; /* Small footer text */
+  color: #024051;
+  padding: 10px 0;
+  line-height: 1.2; /* Close line spacing */
+  margin-top: 20px;
+}
+
+footer.socials-footer a {
+  color: #024051;
+  text-decoration: none;
+}
+
+footer.socials-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
