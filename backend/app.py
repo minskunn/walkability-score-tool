@@ -26,8 +26,9 @@ def calculate_walkability_score(location, radius):
     green_space = get_greenspaces(location, radius)
     public_transportation_accessibility = get_transport(location, radius)
 
-    # Calculate the weighted walkability score
     total_amenities_count = school_and_workplace_count + shopping_and_dining_count + healthcare_services_count
+
+    # Calculate the weighted walkability score
 
     walkability_score = (
         0.40 * normalize(total_amenities_count) +
@@ -143,9 +144,8 @@ def get_transport(location, radius):
     return len((transport_stops))  # The number of unique public transport stops within the given radius
 
 #Surface area of green spaces
-
+    
 def get_greenspaces(location, radius):
-   
     try:
         green_space_tags = {
             'leisure': ['park', 'playground'],
@@ -153,13 +153,22 @@ def get_greenspaces(location, radius):
         }
         green_spaces = ox.features_from_point(center_point=location, tags=green_space_tags, dist=radius)
 
-        # Calculate the total surface area in square meters
-        total_green_area = green_spaces.geometry.area.sum()
+        # Re-project to a projected CRS. WGS84 spatial reference system. 
+        # The areas aren't measured in real-world units but in degrees.
+        green_spaces_projected = green_spaces.to_crs(epsg=3857)
 
-        return total_green_area
+        # Calculate the total surface area in square meters
+        total_green_area_m2 = green_spaces_projected.geometry.area.sum()
+
+        # Convert the total area to square kilometers
+        total_green_area_km2 = total_green_area_m2 / 1_000_000  # m² to km²
+
+        return total_green_area_km2
     except Exception as e:
         print(f"Error fetching green spaces: {e}")
         return 0.0
+    
+
 
 #Normalize a value to a 0–100 scale
 def normalize(value, min_val=0, max_val=100):
