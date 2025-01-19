@@ -49,6 +49,25 @@ def calculate_walkability_score(location, radius):
     return walkability_score, details
 
 #Proximity of education and workspaces 
+#def get_school_and_work_amenities(location, radius):
+    try:
+        school_and_work_tags = {
+            'amenity': ['kindergarten', 'school', 'university', 'college'],
+            'office': True,
+            'building': 'office'
+        }
+
+        # Retrieve the features using features_from_point
+        get_school_and_work_amenities = ox.features_from_point(center_point=location, tags=school_and_work_tags, dist=radius)
+        
+        # Return the number of unique amenities
+        return len(get_school_and_work_amenities)
+    except Exception as e:
+        print(f"Error fetching education and workplace locations: {e}")
+        return 0
+    
+           
+    
 def get_school_and_work_amenities(location, radius):
     try:
         school_and_work_tags = {
@@ -59,6 +78,12 @@ def get_school_and_work_amenities(location, radius):
 
         # Retrieve the features using features_from_point
         get_school_and_work_amenities = ox.features_from_point(center_point=location, tags=school_and_work_tags, dist=radius)
+
+        # Convert the data to a dictionary for testing purposes
+        amenities_details = get_school_and_work_amenities.to_dict('records')  # Converts to a list of dictionaries
+
+        # For testing, print out the raw data
+        print(amenities_details)  # This will print the raw amenities data to the console
         
         # Return the number of unique amenities
         return len(get_school_and_work_amenities)
@@ -153,8 +178,7 @@ def get_greenspaces(location, radius):
         }
         green_spaces = ox.features_from_point(center_point=location, tags=green_space_tags, dist=radius)
 
-        # Re-project to a projected CRS. WGS84 spatial reference system. 
-        # The areas aren't measured in real-world units but in degrees.
+        # Re-project to a projected CRS.
         green_spaces_projected = green_spaces.to_crs(epsg=3857)
 
         # Calculate the total surface area in square meters

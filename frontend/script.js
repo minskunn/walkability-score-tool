@@ -5,7 +5,7 @@ const dummyData = {
   proximity_to_shopping_and_dining: 10,
   public_transportation_accessibility: 8,
   walkable_street_share: 40,
-  total_walkability_score: 78,
+  total_walkability_score: 50,
 };
 
 document
@@ -31,6 +31,8 @@ document
       const walkabilityMessage = dummyData.total_walkability_score;
       document.getElementById("walkability-score").innerText =
         walkabilityMessage;
+
+      document.querySelector(".metrics").style.display = "block";
 
       // Log the address for debugging
       console.log("Address entered:", address);

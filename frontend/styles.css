@@ -1,19 +1,14 @@
-/* General Page Styling */
 body {
   font-family: "Cormorant Garamond", serif;
   color: #024051; /* Text color for the entire page */
-  margin: 0;
+  margin: 2px;
   padding: 0;
-}
-
-.container {
-  margin: 0;
-  padding: 0;
+  overflow-x: hidden;
 }
 
 /* Header and Main Title */
 header h1 {
-  font-size: 16px; /* Small font size for the main title */
+  font-size: 15px;
   font-weight: 900;
   text-align: center;
   margin-top: 12px;
@@ -48,7 +43,7 @@ header h1 {
 /* Input Group Styling (Rounded Search Bar and Button Inside) */
 .input-group {
   display: flex;
-  width: 50%; /* Adjust width as needed */
+  width: 100%; /* Full width on mobile */
   max-width: 600px; /* Limit max size */
   background-color: #fff; /* White background for the bar */
   border-radius: 50px; /* Fully rounded corners */
@@ -90,23 +85,42 @@ header h1 {
   justify-content: center; /* Centers the input group horizontally */
   align-items: center; /* Centers the input group vertically */
   background-color: #cdc4ff;
-  padding: 20px 40px 40px 40px; /* Comfortable padding around the bar */
+  padding: 20px 40px 90px 40px; /* Comfortable padding around the bar */
   margin-top: 0px; /* Removes extra spacing */
 }
 
 /* Metrics Section */
+
 .metrics {
+  display: none;
   margin-top: 40px;
 }
 
+.total-score {
+  font-size: 50px;
+  font-weight: 400;
+  color: #024051;
+}
+
+.detailed-metrics {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.metrics-heading {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: large;
+}
+
 .metric-box h5 {
-  font-size: 1.5rem; /* Easy-to-read metric titles */
+  font-size: larger;
   font-weight: 600;
-  margin-bottom: 5px;
+  margin-bottom: 30px;
 }
 
 .metric-box .metric-value {
-  font-size: 1.25rem;
+  font-size: 25px;
   font-weight: 500;
 }
 
@@ -140,10 +154,10 @@ header h1 {
 footer.socials-footer {
   background-color: #fff; /* White footer background */
   text-align: center;
-  font-size: 0.75rem; /* Small footer text */
+  font-size: 15px;
   color: #024051;
   padding: 10px 0;
-  line-height: 1.2; /* Close line spacing */
+  line-height: 1; /* Close line spacing */
   margin-top: 20px;
 }
 

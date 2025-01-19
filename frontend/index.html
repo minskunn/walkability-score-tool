@@ -42,67 +42,77 @@
       </div>
       <div class="metrics text-center my-4">
         <!-- Total Score Section -->
-        <p class="text-muted">Your total walkability score</p>
-        <div
-          class="total-score display-4 fw-bold text-primary"
-          id="walkability-score"
-        ></div>
-
-        <!-- Metrics Section -->
-        <div class="row mt-4">
-          <!-- First Row of Metrics -->
-          <div class="col-12 col-md-4">
-            <div class="metric-box">
-              <h5 class="metric-title">Schools & Workplaces</h5>
-              <p
-                class="metric-value text-success"
-                id="proximity_to_school_and_workplace"
-              ></p>
-            </div>
-          </div>
-          <div class="col-12 col-md-4">
-            <div class="metric-box">
-              <h5 class="metric-title">Shopping & Dining</h5>
-              <p
-                class="metric-value text-success"
-                id="proximity_to_shopping_and_dining"
-              ></p>
-            </div>
-          </div>
-          <div class="col-12 col-md-4">
-            <div class="metric-box">
-              <h5 class="metric-title">Healthcare Services</h5>
-              <p
-                class="metric-value text-success"
-                id="proximity_to_healthcare"
-              ></p>
-            </div>
-          </div>
+        <div class="metrics-heading">
+          On a scale from 0 to 100 your total walkability score is
         </div>
-        <div class="row mt-4">
-          <!-- Second Row of Metrics -->
-          <div class="col-12 col-md-4">
-            <div class="metric-box">
-              <h5 class="metric-title">Walkable Streets (%)</h5>
-              <p
-                class="metric-value text-success"
-                id="walkable_street_share"
-              ></p>
+        <div class="total-score" id="walkability-score"></div>
+        <div class="metrics-heading">
+          and within 15-minute walk radius you should find..
+        </div>
+
+        <!-- detailed metrics Section -->
+        <div class="detailed-metrics">
+          <div class="row mt-4">
+            <!-- First Row of Metrics -->
+            <div class="col-12 col-md-4">
+              <div class="metric-box">
+                <p
+                  class="metric-value text-success"
+                  id="proximity_to_school_and_workplace"
+                ></p>
+                <h5 class="metric-title">
+                  Educational institutions and workplaces
+                </h5>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="metric-box">
+                <p
+                  class="metric-value text-success"
+                  id="proximity_to_shopping_and_dining"
+                ></p>
+                <h5 class="metric-title">
+                  Amenities related to shopping and dining
+                </h5>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="metric-box">
+                <p
+                  class="metric-value text-success"
+                  id="proximity_to_healthcare"
+                ></p>
+                <h5 class="metric-title">Healthcare Services</h5>
+              </div>
             </div>
           </div>
-          <div class="col-12 col-md-4">
-            <div class="metric-box">
-              <h5 class="metric-title">Green Space (m²)</h5>
-              <p class="metric-value text-success" id="green_space"></p>
+          <div class="row mt-4">
+            <!-- Second Row of Metrics -->
+            <div class="col-12 col-md-4">
+              <div class="metric-box">
+                <p
+                  class="metric-value text-success"
+                  id="walkable_street_share"
+                ></p>
+                <h5 class="metric-title">
+                  % of the streets are for pedestrians
+                </h5>
+              </div>
             </div>
-          </div>
-          <div class="col-12 col-md-4">
-            <div class="metric-box">
-              <h5 class="metric-title">Public Transport Stops</h5>
-              <p
-                class="metric-value text-success"
-                id="public_transportation_accessibility"
-              ></p>
+            <div class="col-12 col-md-4">
+              <div class="metric-box">
+                <p class="metric-value text-success" id="green_space"></p>
+                <h5 class="metric-title">km² of green space</h5>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="metric-box">
+                <p
+                  class="metric-value text-success"
+                  id="public_transportation_accessibility"
+                ></p>
+                <h5 class="metric-title">Public Transport Stops</h5>
+              </div>
             </div>
           </div>
         </div>
@@ -114,18 +124,20 @@
             <div class="why-section">
               <h3 class="fw-bold">Why Walkability Matters?</h3>
               <p>
-                It’s not just about convenience—walkability shapes how we
-                connect with our neighborhoods and the world around us. It
-                fosters healthier lifestyles, reduces our environmental impact,
-                and brings the essentials of daily life closer to home. When
-                cities prioritize people over cars, streets become places for
-                connection, local businesses thrive, and green spaces flourish.
+                It is not just about convenience. <br />
+                <br />
+                Walkability shapes how we connect with our neighborhoods and the
+                world around us. It fosters healthier lifestyles, reduces our
+                environmental impact, and brings the essentials of daily life
+                closer to home. When cities prioritize people over cars, streets
+                become places for connection, local businesses thrive, and green
+                spaces flourish.
               </p>
             </div>
           </div>
           <div class="col-12 col-md-6">
             <img
-              src="placeholder-image-1.jpg"
+              src="images/pexels-rome.jpg"
               alt="A walkable city concept"
               class="img-fluid rounded"
             />
@@ -138,17 +150,24 @@
             <div class="how-section">
               <h3 class="fw-bold">How Does This Work?</h3>
               <p>
-                Enter your address to calculate a total walkability score based
-                on six key metrics: proximity to schools, workplaces, shopping,
-                dining, green spaces, and public transport stops. We analyze
-                walkable streets, green areas, and access to daily essentials to
-                give you a complete picture of how walkable your area is.
+                The Walkability Score Calculator evaluates how
+                pedestrian-friendly an area is by analyzing selected features
+                within a 1,200-meter radius, the distance an average person
+                walks in 15 minutes. After entering an address, the calculator
+                identifies nearby amenities such as schools, shops, offices and
+                healthcare services, calculates the percentage of streets
+                reserved for pedestrians, measures the area of parks and green
+                spaces, and counts the public transport stops. These factors are
+                combined into a total score, with proximity to amenities
+                weighted at 40%, walkable streets at 30%, and green spaces and
+                public transport each at 15%, providing an indication of the
+                area’s walkability.
               </p>
             </div>
           </div>
           <div class="col-12 col-md-6 order-md-1">
             <img
-              src="placeholder-image-2.jpg"
+              src="images/pexels-lisbon.jpg"
               alt="How the walkability tool works"
               class="img-fluid rounded"
             />
