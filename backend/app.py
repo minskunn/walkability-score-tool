@@ -7,6 +7,7 @@ from shapely.geometry import Point, box
 from geopy.geocoders import Nominatim 
 import certifi
 import json  
+from memory_profiler import profile
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -19,6 +20,8 @@ CORS(app, origins=["https://walkability-score.netlify.app"])
 
 # Disable cache 
 ox.settings.use_cache = False
+
+@profile  # Decorator to profile memory usage
 
 def calculate_walkability_score(location, radius):
     school_and_workplace_count=get_school_and_work_amenities(location, radius)
@@ -51,6 +54,7 @@ def calculate_walkability_score(location, radius):
     return walkability_score, details
 
 #Proximity of education and workspaces 
+@profile
 def get_school_and_work_amenities(location, radius):
     try:
         school_and_work_tags = {
@@ -73,6 +77,7 @@ def get_school_and_work_amenities(location, radius):
             
 
 #Amenities related to food and retail
+@profile
 def get_shopping_and_dining(location, radius):
     try:
         amenity_tags = {
@@ -98,6 +103,7 @@ def get_shopping_and_dining(location, radius):
 
 
 #Healthcare, amenities related to medical and health services
+@profile
 def get_health_amenities(location, radius):
     try:
         healthcare_tags = {
@@ -122,6 +128,7 @@ def get_health_amenities(location, radius):
         return 0
 
 #Calculate percentage of pedestrian-friendly streets of all the street in the radius area
+@profile
 def get_streets(location, radius):
     G = ox.graph_from_point(location, dist=radius, network_type='walk') 
     
@@ -140,6 +147,7 @@ def get_streets(location, radius):
 
 
 #Amount of unique public transport stops within the radius
+@profile
 def get_transport(location, radius):
     transport_stops = ox.features_from_point(
         location, 
@@ -153,7 +161,7 @@ def get_transport(location, radius):
     return len((transport_stops))  # The number of unique public transport stops within the given radius
 
 #Surface area of green spaces
-    
+@profile    
 def get_greenspaces(location, radius):
     try:
         green_space_tags = {
@@ -171,7 +179,8 @@ def get_greenspaces(location, radius):
         # Convert the total area to square kilometers
         total_green_area_km2 = total_green_area_m2 / 1_000_000  # m² to km²
 
-        return total_green_area_km2
+
+        return round(total_green_area_km2, 2)
     except Exception as e:
         print(f"Error fetching green spaces: {e}")
         return 0.0
