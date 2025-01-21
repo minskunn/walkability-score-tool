@@ -15,7 +15,7 @@ from flask_cors import CORS
 os.environ['SSL_CERT_FILE'] = certifi.where()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["https://walkability-score.netlify.app"])
 
 # Disable cache 
 ox.settings.use_cache = False
