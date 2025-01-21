@@ -13,6 +13,8 @@ document
       })
         .then((response) => response.json()) // Parse the JSON response
         .then((data) => {
+          // Log the received data for debugging
+          console.log("Received data:", data);
           // Inject the real data into the HTML
           document.getElementById(
             "proximity_to_school_and_workplace"
