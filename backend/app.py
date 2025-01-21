@@ -9,11 +9,13 @@ import certifi
 import json  
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 # Set the SSL certificate path
 os.environ['SSL_CERT_FILE'] = certifi.where()
 
 app = Flask(__name__)
+CORS(app)
 
 # Disable cache 
 ox.settings.use_cache = False
