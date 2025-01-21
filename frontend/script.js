@@ -18,21 +18,22 @@ document
           // Inject the real data into the HTML
           document.getElementById(
             "proximity_to_school_and_workplace"
-          ).innerText = data.proximity_to_school_and_workplace;
+          ).innerText = data.details.proximity_to_school_and_workplace;
           document.getElementById(
             "proximity_to_shopping_and_dining"
-          ).innerText = data.proximity_to_shopping_and_dining;
+          ).innerText = data.details.proximity_to_shopping_and_dining;
           document.getElementById("proximity_to_healthcare").innerText =
-            data.proximity_to_healthcare;
-          document.getElementById("green_space").innerText = data.green_space;
+            data.details.proximity_to_healthcare;
+          document.getElementById("green_space").innerText =
+            data.details.green_space;
           document.getElementById("walkable_street_share").innerText =
-            data.walkable_street_share;
+            data.details.walkable_street_share;
           document.getElementById(
             "public_transportation_accessibility"
-          ).innerText = data.public_transportation_accessibility;
+          ).innerText = data.details.public_transportation_accessibility;
 
           // Change the walkability score display
-          const walkabilityMessage = data.total_walkability_score;
+          const walkabilityMessage = data.walkability_score;
           document.getElementById("walkability-score").innerText =
             walkabilityMessage;
 
