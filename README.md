@@ -2,6 +2,8 @@
 
 ## Introduction
 
+Note: Due to Render's Free Tier memory cap the full functionality is limited on dense urban areas
+
 The **Walkability Score Calculator** is a tool designed to evaluate how pedestrian-friendly a location is by analyzing key features within a 1,200-meter radius — approximately the distance an average person can walk in 15 minutes.  
 
 By entering an address, the calculator assesses the surrounding area, identifying:  
